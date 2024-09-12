@@ -1,19 +1,29 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Login from './Login';
-import Register from './Register';
-import Home from './Home';
+import React, { useState, useEffect } from 'react';
+import LoginForm from './components/LoginForm';
+import HomePage from './components/HomePage';
+import './styles.css';
 
-const App = () => {
+function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsLoggedIn(true);
+      // Optionally, fetch user details from backend
+    }
+  }, []);
+
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-      </Routes>
-    </Router>
+    <div className="container">
+      {!isLoggedIn ? (
+        <LoginForm setIsLoggedIn={setIsLoggedIn} setUser={setUser} />
+      ) : (
+        <HomePage user={user} setIsLoggedIn={setIsLoggedIn} />
+      )}
+    </div>
   );
-};
+}
 
 export default App;
